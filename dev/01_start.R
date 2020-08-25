@@ -31,8 +31,8 @@ golem::set_golem_options()
 usethis::use_mit_license( name = "Nelson Stevens" )  # You can set another license here
 #usethis::use_readme_rmd( open = FALSE )
 usethis::use_code_of_conduct()
-usethis::use_lifecycle_badge( "Development" )
-usethis::use_news_md( open = FALSE )
+usethis::use_lifecycle_badge( "experimental" )
+#usethis::use_news_md( open = FALSE )
 
 ## Use git ----
 usethis::use_git()
