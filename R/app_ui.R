@@ -9,8 +9,32 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here 
-    fluidPage(
-      h1("lions2020")
+    shinydashboard::dashboardPage(
+      shinydashboard::dashboardHeader(
+        title = "Lions 2020"
+      ),
+      shinydashboard::dashboardSidebar(
+        shinydashboard::sidebarMenu(
+          shinydashboard::menuItem(
+            "Offense",
+            tabName = "offense",
+            icon = shiny::icon("baseball-ball"),
+            shinydashboard::menuSubItem(
+              "Spider",
+              tabName = "spider",
+              icon = shiny::icon("spider")
+            )
+          )
+        )
+      ),
+      shinydashboard::dashboardBody(
+        shinydashboard::tabItems(
+          shinydashboard::tabItem(
+            tabName = "spider",
+            mod_spider_ui("main")
+          )
+        )
+      )
     )
   )
 }
