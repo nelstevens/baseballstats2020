@@ -32,10 +32,10 @@ mod_spider_server <- function(input, output, session){
   # get data
   df <- read.csv(
     app_sys("app/www/data/lions_off_tot.csv"),
-    sep = "|"#,
-    #encoding = "UTF-8"
+    sep = ";",
+    encoding = "UTF-8"
   ) %>% 
-    dplyr::filter(Teamname == "Zürich Lions") %>% 
+    dplyr::filter(Teamname == "Z\u00fcrich Lions") %>% 
     dplyr::mutate_at(
       dplyr::vars(statsin),
       .funs = function(x){x/.$PA}
