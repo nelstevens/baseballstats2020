@@ -30,9 +30,10 @@ mod_pies_ui <- function(id){
           "HBP",
           "LOB"
         ),
-        multiple = TRUE)
+        multiple = FALSE)
     ),
-    shiny::uiOutput(ns('ui'))
+    #shiny::uiOutput(ns('ui'))
+    plotly::plotlyOutput(ns("pies"))
   )
 }
     
@@ -85,13 +86,13 @@ mod_pies_server <- function(input, output, session){
       dplyr::arrange(statistic, dplyr::desc(relvalue)) %>% 
       #group_by(statistic) %>% 
       dplyr::mutate(rank = dplyr::row_number()) %>% 
-      dplyr::mutate(Player_1 = ifelse(rank %in% 1:3, as.character(Player), 'Rest')) %>%
+      dplyr::mutate(Player_1 = ifelse(rank %in% 1:5, as.character(Player), 'Rest')) %>%
       dplyr::ungroup() %>% 
       dplyr::group_by(statistic, Player_1) %>% 
       dplyr::mutate(newval = sum(relvalue)) %>% 
       dplyr::ungroup() %>% 
       dplyr::group_by(statistic) %>% 
-      dplyr::top_n(-4, rank) %>% 
+      dplyr::top_n(-6, rank) %>% 
       dplyr::do(plots = 
            plotly::plot_ly(.,
                    labels = ~Player_1,
@@ -106,33 +107,45 @@ mod_pies_server <- function(input, output, session){
     
     
   })
-  
-  lvls <- shiny::reactive({length(input$Stat)})
-  shiny::observe({
-    lapply(1:lvls(), function(i){
-      output[[i]] <- plotly::renderPlotly({
-        pies()$plots[[i]]} %>% 
-          plotly::layout(
-            title = list(
-              text = paste0(
-                '<b>Relative contribution to total ',
-                as.character(pies()$statistic[[i]]),
-                '</b>'
-              ),
-              size = 20
-            )
-          )
+  output$pies <- plotly::renderPlotly({
+    pies()$plots[[1]] %>% 
+      plotly::layout(
+        title = list(
+          text = paste0(
+            '<b>Relative contribution to total ',
+            as.character(pies()$statistic[[1]]),
+            '</b>'
+          ),
+          size = 20
+        )
       )
-    })
   })
-  
-  
-  output$ui <- shiny::renderUI({
-    shiny::req(input$Stat)
-    lapply(1:length(input$Stat), function(i){
-      plotly::plotlyOutput(session$ns(i))
-    })
-  })
+  # lvls <- shiny::reactive({length(input$Stat)})
+  # shiny::observe({
+  #   lapply(1:lvls(), function(i){
+  #     output[[i]] <- plotly::renderPlotly({
+  #       pies()$plots[[i]]} %>% 
+  #         plotly::layout(
+  #           title = list(
+  #             text = paste0(
+  #               '<b>Relative contribution to total ',
+  #               as.character(pies()$statistic[[i]]),
+  #               '</b>'
+  #             ),
+  #             size = 20
+  #           )
+  #         )
+  #     )
+  #   })
+  # })
+  # 
+  # 
+  # output$ui <- shiny::renderUI({
+  #   shiny::req(input$Stat)
+  #   lapply(1:length(input$Stat), function(i){
+  #     plotly::plotlyOutput(session$ns(i))
+  #   })
+  # })
 }
     
 ## To be copied in the UI
