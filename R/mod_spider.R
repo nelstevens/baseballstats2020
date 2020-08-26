@@ -27,7 +27,7 @@ mod_spider_server <- function(input, output, session){
   
   
   # define stats
-  statsin <- c("H", "X2B", "X3B", "HR", "BB", "SO", "HBP")
+  statsin <- c("H", "X2B", "X3B", "HR", "HBP", "BB", "SO")
  
   # get data
   df <- read.csv(
@@ -87,7 +87,8 @@ mod_spider_server <- function(input, output, session){
             visible = T#,
             #range = c(0,1)
           )
-        )
+        ),
+        title = "Outcome probabilities per PA"
       )
     return(plt)
   })
