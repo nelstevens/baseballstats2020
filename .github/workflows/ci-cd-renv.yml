@@ -25,17 +25,11 @@ jobs:
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
-            
-      - name: Restore packages
-          shell: Rscript {0}
-          run: |
-            if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
-            renv::restore()
-
       - name: Install system dependencies
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
+          Rscript -e "install.packages('renv')"
           Rscript -e "renv::install('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
