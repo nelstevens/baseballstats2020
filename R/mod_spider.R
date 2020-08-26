@@ -34,7 +34,7 @@ mod_spider_server <- function(input, output, session){
     app_sys("app/www/data/lions_off_tot.csv"),
     sep = "|"
   ) %>% 
-    #dplyr::filter(Teamname == "Z\u00fcrich Lions") %>% 
+    dplyr::filter(Teamname == "Z\u00fcrich Lions") %>% 
     dplyr::mutate_at(
       dplyr::vars(statsin),
       .funs = function(x){x/.$PA}
