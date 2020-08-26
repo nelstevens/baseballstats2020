@@ -23,6 +23,11 @@ app_ui <- function(request) {
               "Spider",
               tabName = "spider",
               icon = shiny::icon("spider")
+            ),
+            shinydashboard::menuSubItem(
+              "Relative contributions",
+              tabName = "pies",
+              icon = shiny::icon("spider")
             )
           )
         )
@@ -32,6 +37,10 @@ app_ui <- function(request) {
           shinydashboard::tabItem(
             tabName = "spider",
             mod_spider_ui("main")
+          ),
+          shinydashboard::tabItem(
+            tabName = "pies",
+            mod_pies_ui("main")
           )
         )
       )

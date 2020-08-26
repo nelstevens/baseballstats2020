@@ -24,6 +24,8 @@ usethis::use_package( "tidyr" )
 usethis::use_package( "dplyr" )
 usethis::use_package( "shinyWidgets" )
 usethis::use_package( "magrittr" )
+usethis::use_package( "stringr" )
+usethis::use_package( "forcats" )
 ## renv setup (one-off) ----
 renv::init(settings = list(snapshot.type = "explicit"))
 renv::snapshot()
@@ -37,7 +39,7 @@ install.packages("usethis")
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "spider" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "pies" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

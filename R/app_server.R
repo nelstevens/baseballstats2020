@@ -14,4 +14,9 @@ app_server <- function( input, output, session ) {
     mod_spider_server,
     "main"
   )
+  
+  shiny::callModule(
+    mod_pies_server,
+    "main"
+  )
 }
