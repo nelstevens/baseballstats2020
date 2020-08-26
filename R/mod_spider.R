@@ -88,7 +88,8 @@ mod_spider_server <- function(input, output, session){
             #range = c(0,1)
           )
         ),
-        title = "Outcome probabilities per PA"
+        title = "Outcome probabilities per PA</br>",
+        margin = list(t=50)
       )
     return(plt)
   })
