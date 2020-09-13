@@ -19,6 +19,7 @@ app_ui <- function(request) {
             "Offense",
             tabName = "offense",
             icon = shiny::icon("baseball-ball"),
+            startExpanded = T,
             shinydashboard::menuSubItem(
               "Spider",
               tabName = "spider",
@@ -28,7 +29,12 @@ app_ui <- function(request) {
               "Relative contributions",
               tabName = "pies",
               icon = shiny::icon("spider")
-            )
+            )#,
+            # shinydashboard::menuSubItem(
+            #   "stats over time",
+            #   tabName = "timeline",
+            #   icon = shiny::icon("spider")
+            # )
           )
         )
       ),
@@ -41,6 +47,10 @@ app_ui <- function(request) {
           shinydashboard::tabItem(
             tabName = "pies",
             mod_pies_ui("main")
+          ),
+          shinydashboard::tabItem(
+            tabName = "timeline",
+            mod_timeline_ui("main")
           )
         )
       )

@@ -19,4 +19,9 @@ app_server <- function( input, output, session ) {
     mod_pies_server,
     "main"
   )
+  
+  # shiny::callModule(
+  #   mod_timeline_server,
+  #   "main"
+  # )
 }

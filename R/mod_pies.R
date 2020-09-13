@@ -11,26 +11,39 @@ mod_pies_ui <- function(id){
   ns <- NS(id)
   tagList(
     shiny::fluidRow(
-      shiny::selectInput(
-        ns('Stat'),
-        'Select statisitic(s)',
-        choices = c(
-          "PA",
-          "AB",
-          "R",
-          "H",
-          "RBI",
-          "X2B",
-          "X3B",
-          "HR",
-          "SB",
-          "CS",
-          "BB",
-          "SO",
-          "HBP",
-          "LOB"
-        ),
-        multiple = FALSE)
+      shiny::column(
+        width = 4,
+        shiny::selectInput(
+          ns('Stat'),
+          'Select statisitic(s)',
+          choices = c(
+            "PA",
+            "AB",
+            "R",
+            "H",
+            "RBI",
+            "X2B",
+            "X3B",
+            "HR",
+            "SB",
+            "CS",
+            "BB",
+            "SO",
+            "HBP",
+            "LOB"
+          ),
+          multiple = FALSE
+        )
+      ),
+      shiny::column(
+        width = 4,
+        shiny::radioButtons(
+          ns("pergame"),
+          "choose calculation method",
+          choices = c("total", "per game"),
+          selected = "total"
+        )
+      )
     ),
     #shiny::uiOutput(ns('ui'))
     plotly::plotlyOutput(ns("pies"))
@@ -66,7 +79,7 @@ mod_pies_server <- function(input, output, session){
     encoding = "UTF-8"
   ) %>% 
     dplyr::filter(Teamname == "Z\u00fcrich Lions") %>% 
-    dplyr::select(Player, soi) %>% 
+    dplyr::select(Player, G, soi) %>% 
     dplyr::mutate_all(dplyr::funs(stringr::str_replace(., '^\\.', '0.'))) %>%
     # convert all columns to appropriate data type
     dplyr::mutate_all(type.convert) %>% 
@@ -75,8 +88,23 @@ mod_pies_server <- function(input, output, session){
   
   # subset df
   df2 <- shiny::reactive({
-    df %>% 
+    if (input$pergame == "total") {
+    dftmp <- df %>% 
       dplyr::filter(statistic %in% !!input$Stat)
+    return(dftmp)
+    } else {
+      dftmp <- df %>% 
+        dplyr::filter(statistic %in% c("G", !!input$Stat)) %>% 
+        dplyr::group_by(Player) %>% 
+        dplyr::mutate(
+          value = value / dplyr::first(value)
+        ) %>% 
+        dplyr::ungroup() %>% 
+        dplyr::filter(statistic != "G")
+      return(dftmp)
+        
+        
+    }
   })
   
   pies <- shiny::reactive({
@@ -107,15 +135,31 @@ mod_pies_server <- function(input, output, session){
     
     
   })
+  
+  # compute label
+  lab <- shiny::reactive({
+    if (input$pergame == "total") {
+      la <- paste0(
+        '<b>Relative contribution to total ',
+        as.character(pies()$statistic[[1]]),
+        '</b>'
+      )
+      return(la)
+    } else {
+      la <- paste0(
+        '<b>Relative contribution to total ',
+        as.character(pies()$statistic[[1]]),
+        ' per game',
+        '</b>'
+      )
+      return(la)
+    }
+  })
   output$pies <- plotly::renderPlotly({
     pies()$plots[[1]] %>% 
       plotly::layout(
         title = list(
-          text = paste0(
-            '<b>Relative contribution to total ',
-            as.character(pies()$statistic[[1]]),
-            '</b>'
-          ),
+          text = lab(),
           size = 20
         )
       )
